@@ -26,8 +26,9 @@ class Fixture(object):
 
         Example::
 
+        fixture = Fixture(DBSession)
         hashes = ({'foo': "{'foo': 'bar', '1': '2'}}", {'foo': "{'test': 'data'}"})
-        add_fixture(TestHSTORE, hashes)
+        fixture.add(TestHSTORE, hashes)
         """
         if delete:
             model.__table__.create(checkfirst=True, bind=self.DBSession.bind.engine)
