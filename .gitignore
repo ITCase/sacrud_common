@@ -3,11 +3,12 @@
 *.swp
 .settings
 .project
+.ropeproject
 .pydevproject
-sacrud_catalog/.coverage
-sacrud_catalog/TODO
+.coverage
+TODO
 *.pyc
-sacrud_catalog/cover
+cover
 cover
 .coverage
 build

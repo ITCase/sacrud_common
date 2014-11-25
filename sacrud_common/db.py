@@ -10,6 +10,7 @@
 Common tools for fixtures
 """
 import os
+import json
 from random import randint
 
 import transaction
@@ -17,8 +18,9 @@ from sacrud.action import CRUD
 
 
 class Fixture(object):
-    def __init__(self, DBSession):
+    def __init__(self, DBSession, path=None):
         self.DBSession = DBSession
+        self.path = path
 
     def add(self, model, fixtures, delete=True):
         """
@@ -34,6 +36,11 @@ class Fixture(object):
             model.__table__.create(checkfirst=True, bind=self.DBSession.bind.engine)
             self.DBSession.query(model).delete()
             transaction.commit()
+        if isinstance(fixtures, str):
+            path = os.path.join(self.path, fixtures)
+            json_data = open(path).read()
+            fixtures = json.loads(json_data)
+
         for fixture in fixtures:
             CRUD(self.DBSession, model, request=fixture).add()
 
