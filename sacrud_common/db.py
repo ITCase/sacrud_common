@@ -9,15 +9,17 @@
 """
 Common tools for fixtures
 """
-import os
 import json
+import os
 from random import randint
 
 import transaction
+
 from sacrud.action import CRUD
 
 
 class Fixture(object):
+
     def __init__(self, DBSession, path=None):
         self.DBSession = DBSession
         self.path = path
@@ -33,7 +35,8 @@ class Fixture(object):
         fixture.add(TestHSTORE, hashes)
         """
         if delete:
-            model.__table__.create(checkfirst=True, bind=self.DBSession.bind.engine)
+            model.__table__.create(checkfirst=True,
+                                   bind=self.DBSession.bind.engine)
             self.DBSession.query(model).delete()
             transaction.commit()
         if isinstance(fixtures, str):
@@ -54,10 +57,18 @@ def add_extension(engine, *args):
     Add extension to PostgreSQL database.
     """
     conn = engine.connect()
+    is_superuser = conn.scalar('''SELECT * FROM pg_user
+                               WHERE usename=CURRENT_USER
+                               AND usesuper=True;''')
+    if not is_superuser:
+        conn.close()
+        return False
+
     for ext in args:
         conn.execute('CREATE EXTENSION IF NOT EXISTS "%s"' % ext)
     conn.execute('COMMIT')
     conn.close()
+    return True
 
 
 def add_triggers(engine, SQL_path, *args):
