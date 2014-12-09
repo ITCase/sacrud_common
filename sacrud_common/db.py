@@ -45,7 +45,8 @@ class Fixture(object):
             fixtures = json.loads(json_data)
 
         for fixture in fixtures:
-            CRUD(self.DBSession, model, request=fixture).add()
+            if isinstance(fixture, dict):
+                CRUD(self.DBSession, model, request=fixture).add()
 
     def rand_id(self, model):
         qty = len(self.DBSession.query(model).all())
