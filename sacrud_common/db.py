@@ -31,7 +31,8 @@ class Fixture(object):
         Example::
 
         fixture = Fixture(DBSession)
-        hashes = ({'foo': "{'foo': 'bar', '1': '2'}}", {'foo': "{'test': 'data'}"})
+        hashes = ({'foo': "{'foo': 'bar', '1': '2'}}",
+                  {'foo': "{'test': 'data'}"})
         fixture.add(TestHSTORE, hashes)
         """
         if delete:
@@ -46,7 +47,7 @@ class Fixture(object):
 
         for fixture in fixtures:
             if isinstance(fixture, dict):
-                CRUD(self.DBSession, model, request=fixture).add()
+                CRUD(self.DBSession, model).create(fixture)
 
     def rand_id(self, model):
         qty = len(self.DBSession.query(model).all())
